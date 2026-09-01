@@ -1,0 +1,24 @@
+#AMBIENTE VIRTUAL:
+.venv/
+venv/
+
+#Python:
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de mídia
+media/
+
+# Arquivos estáticos gerados
+staticfiles/
+
+# Variáveis de ambiente
+.env
+
+# VS Code
+.vscode/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
