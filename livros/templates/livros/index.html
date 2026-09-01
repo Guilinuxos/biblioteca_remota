@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>BIBLIOTECA</h1>
+
+    {% for livro in livros %}
+        <h2>{{ livro.titulo }}</h2>
+        {% if livro.capa %}
+        <img src="{{ livro.capa.url }}" alt="Capa de {{ livro.titulo }}">
+        {% endif %}
+    {% endfor %}
+
+    
+</body>
+</html>
