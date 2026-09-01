@@ -9,4 +9,4 @@ class Livro(models.Model):
     ano = models.PositiveIntegerField(
         validators = [MinValueValidator(1000), MaxValueValidator(9999)]
     )
-
+    capa = models.ImageField(upload_to="capas/")
