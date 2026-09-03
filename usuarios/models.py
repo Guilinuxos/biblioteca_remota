@@ -25,12 +25,13 @@ class Leitor(Usuario):
 
 class Bibliotecario(Usuario):
     matricula = models.CharField(max_length=5, unique=True)
+    
 
-    def cadastrar_livro(self):
-         pass
-
-    def excluir_livro(self):
-         pass
+    def cadastrar_livro(self,livro):
+          livro.save()
+         
+    def excluir_livro(self, livro):
+         livro.delete()
 
     def editar_livro(self):
          pass

@@ -1,59 +1,58 @@
 from django.shortcuts import render, redirect
 from .models import *
+from livros.models import Livro
 
 # Create your views here.
 def mostrar_users(request):
     usuario = Usuario.objects.all()
     return render(request, "livros/index.html", {"usuario": usuario})
 
-#LEITOR
-def fazer_loginleitor(request):
+#USUARIO
+def fazer_login(request):
     if request.method == "POST":
         cpf = request.POST["cpf"]
-        email = request.POST["email"]
         senha = request.POST["senha"]
 
         try:
-            usuario = Leitor.objects.get(
-                cpf = cpf,
-                email = email,
-                senha = senha,
-            )
-            return redirect("tela_leitor")
-        except Leitor.DoesNotExist:
-            return render(request, "usuarios/login_leitor.html", {
-                "erro": "falha no login"
-            })
-    return render(request, "usuarios/login_leitor.html")
+            usuario = Leitor.objects.get(cpf=cpf, senha=senha)
+            request.session["usuario_id"] = usuario.id
+            request.session["tipo_usuario"] = "leitor"
 
+            return redirect("home_leitor")
+
+        except Leitor.DoesNotExist:
+            pass
+        try:
+            usuario = Bibliotecario.objects.get(cpf=cpf, senha=senha)
+
+            request.session["usuario_id"] = usuario.id
+            request.session["tipo_usuario"] = "bibliotecario"
+
+            return redirect("home_gestor")
+        except Bibliotecario.DoesNotExist:
+            return render(request, "usuarios/login.html", {
+                "erro": "CPF ou senha incorretos"
+            })
+
+    return render(request, "usuarios/login.html")
+
+
+#LEITOR
 
 #BIBLIOTECARIO
-def fazer_loginbib(request):
+def cadastrar_livro(request):
     if request.method == "POST":
-            cpf = request.POST["cpf"]
-            email = request.POST["email"]
-            senha = request.POST["senha"]
-            matricula = request.POST["matricula"]
-    
-            try:
-                bibliotecario = Bibliotecario.objects.get(
-                    cpf = cpf,
-                    email = email,
-                    senha = senha,
-                    matricula = matricula,
-                )
-                return redirect("tela_gestor")
-            except Bibliotecario.DoesNotExist:
-                return render(request, "usuarios/login_bib.html", {
-                    "erro": "falha no login"
-                })
-    return render(request, "usuarios/login_bib.html")
+        livro = Livro(
+            titulo = request.POST["titulo"],
+            autor=request.POST["autor"],
+            sinopse=request.POST["sinopse"],
+            genero=request.POST["genero"],
+            editora=request.POST["editora"],
+            ano=request.POST["ano"],
+            capa=request.FILES.get("capa"),
+        )
+        bibliotecario_id = request.session.get("bibliotecario_id")
+        bibliotecario = Bibliotecario.objects.get(id=bibliotecario_id)
+        bibliotecario.cadastrar_livro(livro)
 
-def mostrar_leitores(request):
-    bibliotecario = Bibliotecario.objects.first()
-
-    leitores = bibliotecario.ver_leitores()
-
-    return render(request, "usuarios/leitores.html", {
-        "leitores": leitores
-    })
+        return redirect("mostrar_livros")
