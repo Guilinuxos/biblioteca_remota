@@ -3,6 +3,6 @@ from django.http import HttpResponse
 from .models import Livro
 
 # Create your views here.
-def index(request):
+def mostrar_livros(request):
     livros = Livro.objects.all()
-    return render(request, "livros/index.html", {"livros": livros})
+    return render(request, "livros/acervo.html", {"livros": livros})
