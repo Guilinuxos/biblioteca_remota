@@ -8,7 +8,7 @@ __pycache__/
 *$py.class
 
 # Arquivos de mídia
-media/
+
 
 # Arquivos estáticos gerados
 staticfiles/
